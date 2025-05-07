@@ -1,5 +1,7 @@
 import React, { useState, useCallback } from "react";
+//local implementation
 //import { PasswordValidator } from "../components/PasswordValidator/PasswordValidator";
+//npm implementation
 import { PasswordValidator } from "password-validator-lib";
 import "./styles.css";
 import { Toaster, toast } from "sonner";

@@ -25,6 +25,14 @@
   @apply absolute right-3 top-1/2 transform -translate-y-1/2 cursor-pointer;
 }
 
+.top-4 {
+  top: 1rem;
+}
+
+.top-1 {
+  top: 0.25rem;
+}
+
 .show-password-icon {
   @apply w-5 h-5 text-gray-500;
 }
