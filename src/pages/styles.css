@@ -36,7 +36,7 @@
 }
 
 .side-description {
-  @apply text-gray-600 text-sm font-sans w-full text-center pt-2;
+  @apply text-gray-600 text-sm font-sans w-full text-center pt-2 relative w-full max-w-sm my-0 mx-auto;
 }
 
 .side-inputs {

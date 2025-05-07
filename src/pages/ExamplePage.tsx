@@ -1,15 +1,15 @@
-import React, { useState } from "react";
+import React, { useState, useCallback } from "react";
 import PasswordValidator from "../components/PasswordValidator/PasswordValidator";
 import "./styles.css";
 import { Toaster, toast } from "sonner";
 
 const ExamplePage: React.FC = () => {
   const [valueUserName, setValueUserName] = useState("");
-  //Password value if needed
-  const [valueUPassWord, setValueUPassWord] = useState("");
+  // State to manage the password input if needed
+  const [valuePassword, setValuePassword] = useState("");
   const [isFocused, setIsFocused] = useState(false);
-  const [isPasswordValid, setIsPasswordValid] = useState<boolean>(false);
-  const [isUserNameValid, setIsUserNameValid] = useState<boolean>(false);
+  const [isPasswordValid, setIsPasswordValid] = useState(false);
+  const [isUserNameValid, setIsUserNameValid] = useState(false);
 
   const customRules = [
     {
@@ -23,25 +23,30 @@ const ExamplePage: React.FC = () => {
     },
   ];
 
-  const handlePasswordChange = (value: string, valid: boolean) => {
-    setValueUPassWord(value);
+  const handlePasswordChange = useCallback((value: string, valid: boolean) => {
+    setValuePassword(value);
     setIsPasswordValid(valid);
-  };
+  }, []);
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
-    setIsUserNameValid(e.target.value.length > 0);
-    setValueUserName(e.target.value);
-  };
+  const handleUserNameChange = useCallback(
+    (e: React.ChangeEvent<HTMLInputElement>) => {
+      const value = e.target.value;
+      setValueUserName(value);
+      setIsUserNameValid(value.trim().length > 0);
+    },
+    []
+  );
 
-  const handleFocus = () => {
-    setIsFocused(true);
-  };
-
-  const handleBlur = () => {
-    if (valueUserName === "") {
+  const handleFocus = useCallback(() => setIsFocused(true), []);
+  const handleBlur = useCallback(() => {
+    if (valueUserName.trim() === "") {
       setIsFocused(false);
     }
-  };
+  }, [valueUserName]);
+
+  const handleSubmit = useCallback(() => {
+    toast.success("Password and username are valid!");
+  }, []);
 
   return (
     <div className="page">
@@ -49,7 +54,6 @@ const ExamplePage: React.FC = () => {
       <div className="page-container">
         <div className="side">
           <h1 className="side-title">Password Validator</h1>
-
           <p className="side-description">
             This example shows how to use the password validator component.
           </p>
@@ -61,14 +65,14 @@ const ExamplePage: React.FC = () => {
                 id="name"
                 placeholder=" "
                 value={valueUserName}
-                onChange={handleChange}
+                onChange={handleUserNameChange}
                 onFocus={handleFocus}
                 onBlur={handleBlur}
                 className="input-field"
               />
               <label
                 htmlFor="name"
-                className={` label ${
+                className={`label ${
                   isFocused || valueUserName
                     ? "top-1 text-xs text-[#7395cf]"
                     : "top-4 text-base text-gray-400"
@@ -83,15 +87,17 @@ const ExamplePage: React.FC = () => {
               customRules={customRules}
               options={["specialChar", "digit", "uppercase", "noConsecutive"]}
             />
+
             <button
               disabled={!isPasswordValid || !isUserNameValid}
               className="submit-button"
-              onClick={() => toast.success("Senha válida!")}
+              onClick={handleSubmit}
             >
               Submit
             </button>
           </div>
         </div>
+
         <div className="side background-image max-md:hidden">
           <div className="overlay"></div>
         </div>

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback, useMemo } from "react";
 import "./styles.css";
 import { validatePassword } from "../../utils/validators";
 import view from "../../assets/view.png";
@@ -29,7 +29,7 @@ interface Props {
   customRules?: CustomRule[];
   onValidChange?: (password: string, isValid: boolean) => void;
   customStyles?: CustomStyles;
-  label?: String;
+  label?: string;
 }
 
 const PasswordValidator: React.FC<Props> = ({
@@ -44,43 +44,51 @@ const PasswordValidator: React.FC<Props> = ({
   const [hasStartedTyping, setHasStartedTyping] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
 
-  const validations = validatePassword(password, options);
+  const validations = useMemo(
+    () => validatePassword(password, options),
+    [password, options]
+  );
 
-  const customValidations = customRules.map((rule) => ({
-    message: rule.message,
-    isValid: rule.validate(password),
-  }));
+  const customValidations = useMemo(
+    () =>
+      customRules.map((rule) => ({
+        message: rule.message,
+        isValid: rule.validate(password),
+      })),
+    [password, customRules]
+  );
 
   useEffect(() => {
     if (onValidChange) {
       const isValid =
-        Object.values(validations).every((value) => value) &&
+        Object.values(validations).every(Boolean) &&
         customValidations.every((rule) => rule.isValid);
       onValidChange(password, isValid);
     }
-  }, [validations, customValidations]);
+  }, [validations, customValidations, password, onValidChange]);
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
-    setPassword(e.target.value);
-    if (!hasStartedTyping) {
-      setHasStartedTyping(true);
-    }
-  };
+  const handleChange = useCallback(
+    (e: React.ChangeEvent<HTMLInputElement>): void => {
+      setPassword(e.target.value);
+      if (!hasStartedTyping) {
+        setHasStartedTyping(true);
+      }
+    },
+    [hasStartedTyping]
+  );
 
-  const handleFocus = () => {
-    setIsFocused(true);
-  };
-
-  const handleBlur = () => {
+  const handleFocus = useCallback(() => setIsFocused(true), []);
+  const handleBlur = useCallback(() => {
     if (password === "") {
       setIsFocused(false);
       setHasStartedTyping(false);
     }
-  };
+  }, [password]);
 
-  const togglePasswordVisibility = () => {
-    setShowPassword((prev) => !prev);
-  };
+  const togglePasswordVisibility = useCallback(
+    () => setShowPassword((prev) => !prev),
+    []
+  );
 
   return (
     <div className={`relative w-full max-w-sm ${customStyles.container || ""}`}>
@@ -131,15 +139,11 @@ const PasswordValidator: React.FC<Props> = ({
             {getMessage(req)}
           </li>
         ))}
-        {customRules.map((rule, index) => (
+        {customValidations.map((rule, index) => (
           <li
             key={`custom-${index}`}
             className={`${
-              !hasStartedTyping
-                ? "neutral"
-                : customValidations[index].isValid
-                ? "valid"
-                : "invalid"
+              !hasStartedTyping ? "neutral" : rule.isValid ? "valid" : "invalid"
             } ${customStyles.listItem || ""}`}
           >
             {rule.message}
