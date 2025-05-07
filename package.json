@@ -1,14 +1,30 @@
 {
-  "name": "qventus-password-validator",
+  "name": "password-validator-lib",
   "version": "1.0.0",
-  "private": true,
+  "description": "A reusable password validator component for React",
+  "main": "dist/index.js",
+  "module": "dist/index.esm.js",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "private": false,
   "scripts": {
     "dev": "vite",
-    "build": "vite build",
+    "build": "tsc && vite build",
     "preview": "vite preview",
     "test": "jest",
-    "test:watch": "jest --watch"
+    "test:watch": "jest --watch",
+    "prepublishOnly": "npm run build"
   },
+  "keywords": [
+    "password",
+    "validator",
+    "react",
+    "component"
+  ],
+  "author": "João Pacheco",
+  "license": "MIT",
   "dependencies": {
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
