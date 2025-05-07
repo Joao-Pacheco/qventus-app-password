@@ -29,6 +29,7 @@ interface Props {
   customRules?: CustomRule[];
   onValidChange?: (password: string, isValid: boolean) => void;
   customStyles?: CustomStyles;
+  label?: String;
 }
 
 const PasswordValidator: React.FC<Props> = ({
@@ -36,6 +37,7 @@ const PasswordValidator: React.FC<Props> = ({
   customRules = [],
   onValidChange,
   customStyles = {},
+  label = "Password",
 }) => {
   const [password, setPassword] = useState("");
   const [isFocused, setIsFocused] = useState(false);
@@ -100,7 +102,7 @@ const PasswordValidator: React.FC<Props> = ({
               : "top-4 text-base text-gray-400"
           } ${customStyles.label || ""}`}
         >
-          Password
+          {label}
         </label>
         <button
           type="button"

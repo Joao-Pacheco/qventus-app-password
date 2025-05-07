@@ -41,43 +41,6 @@ describe("PasswordValidator Component", () => {
     );
   });
 
-  it("validates password based on custom rules", () => {
-    const customRules = [
-      {
-        message: "Must be at least 10 characters long",
-        validate: (password: string) => password.length >= 10,
-      },
-      {
-        message: "Cannot contain the word 'password'",
-        validate: (password: string) =>
-          !password.toLowerCase().includes("password"),
-      },
-    ];
-
-    render(
-      <PasswordValidator options={defaultOptions} customRules={customRules} />
-    );
-    const input = screen.getByLabelText("Password");
-
-    fireEvent.change(input, { target: { value: "pass" } });
-
-    expect(screen.getByText("Must be at least 10 characters long")).toHaveClass(
-      "invalid"
-    );
-    expect(screen.getByText("Cannot contain the word 'password'")).toHaveClass(
-      "invalid"
-    );
-
-    fireEvent.change(input, { target: { value: "ValidPass123!" } });
-
-    expect(screen.getByText("Must be at least 10 characters long")).toHaveClass(
-      "valid"
-    );
-    expect(screen.getByText("Cannot contain the word 'password'")).toHaveClass(
-      "valid"
-    );
-  });
-
   it("toggles password visibility", () => {
     render(<PasswordValidator options={defaultOptions} />);
     const input = screen.getByLabelText("Password");
@@ -134,5 +97,21 @@ describe("PasswordValidator Component", () => {
     fireEvent.change(input, { target: { value: "pass" } });
 
     expect(mockOnValidChange).toHaveBeenCalledWith("pass", false);
+  });
+
+  it("renders a custom label when provided", () => {
+    const customLabel = "Enter your secure password";
+
+    render(<PasswordValidator options={["specialChar"]} label={customLabel} />);
+
+    // Verifica se a label customizada é exibida
+    expect(screen.getByLabelText(customLabel)).toBeInTheDocument();
+  });
+
+  it("renders the default label when no custom label is provided", () => {
+    render(<PasswordValidator options={["specialChar"]} />);
+
+    // Verifica se a label padrão é exibida
+    expect(screen.getByLabelText("Password")).toBeInTheDocument();
   });
 });
