@@ -1,7 +1,7 @@
 import React from "react";
 import { render, screen, fireEvent } from "@testing-library/react";
 import "@testing-library/jest-dom";
-import PasswordValidator, { RequirementType } from "./PasswordValidator";
+import { PasswordValidator, RequirementType } from "./PasswordValidator";
 
 describe("PasswordValidator Component", () => {
   const defaultOptions: RequirementType[] = [

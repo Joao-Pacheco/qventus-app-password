@@ -1,9 +1,9 @@
 {
   "name": "password-validator-lib",
-  "version": "1.0.0",
+  "version": "1.0.12",
   "description": "A reusable password validator component for React",
-  "main": "dist/index.js",
-  "module": "dist/index.esm.js",
+  "main": "dist/password-validator-lib.umd.js",
+  "module": "dist/password-validator-lib.es.js",
   "types": "dist/index.d.ts",
   "files": [
     "dist"
@@ -25,11 +25,14 @@
   ],
   "author": "João Pacheco",
   "license": "MIT",
+  "peerDependencies": {
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0"
+  },
   "dependencies": {
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0",
+    "password-validator-lib": "^1.0.12",
     "sonner": "^2.0.3"
   },
   "devDependencies": {
@@ -55,6 +58,7 @@
     "tailwindcss": "^3.4.17",
     "ts-jest": "^29.3.2",
     "typescript": "^5.3.0",
-    "vite": "^5.0.0"
+    "vite": "^5.0.0",
+    "vite-plugin-dts": "^4.5.3"
   }
 }

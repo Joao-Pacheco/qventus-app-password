@@ -32,7 +32,7 @@ interface Props {
   label?: string;
 }
 
-const PasswordValidator: React.FC<Props> = ({
+export const PasswordValidator: React.FC<Props> = ({
   options,
   customRules = [],
   onValidChange,
@@ -154,7 +154,7 @@ const PasswordValidator: React.FC<Props> = ({
   );
 };
 
-const getMessage = (req: RequirementType): string => {
+export const getMessage = (req: RequirementType): string => {
   const messages = {
     specialChar: "Contains special character (!@#$%^&*)",
     digit: "Contains a number",
@@ -163,5 +163,3 @@ const getMessage = (req: RequirementType): string => {
   };
   return messages[req];
 };
-
-export default PasswordValidator;

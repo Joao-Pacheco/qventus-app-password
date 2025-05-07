@@ -1,1 +1,1 @@
-export { default as PasswordValidator } from "./components/PasswordValidator/PasswordValidator";
+export { PasswordValidator } from "./components/PasswordValidator/PasswordValidator";

@@ -2,17 +2,14 @@
   "compilerOptions": {
     "target": "ESNext",
     "module": "ESNext",
-    "lib": ["dom", "es6", "es2017"],
     "declaration": true,
     "declarationDir": "dist",
     "outDir": "dist",
-    "rootDir": "src",
-    "strict": true,
     "jsx": "react",
     "moduleResolution": "node",
     "esModuleInterop": true,
-    "forceConsistentCasingInFileNames": true,
-    "skipLibCheck": true
+    "skipLibCheck": true,
+    "strict": true
   },
   "include": ["src/**/*"],
   "exclude": ["node_modules", "dist", "**/*.test.tsx"]
