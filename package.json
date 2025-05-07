@@ -1,6 +1,6 @@
 {
   "name": "password-validator-lib",
-  "version": "1.1.7",
+  "version": "1.1.8",
   "description": "A reusable password validator component for React",
   "main": "dist/password-validator-lib.umd.js",
   "module": "dist/password-validator-lib.es.js",
@@ -33,7 +33,7 @@
   "dependencies": {
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
-    "password-validator-lib": "^1.1.7",
+    "password-validator-lib": "^1.1.8",
     "sonner": "^2.0.3"
   },
   "devDependencies": {
