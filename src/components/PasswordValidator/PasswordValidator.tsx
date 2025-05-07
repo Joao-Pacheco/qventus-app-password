@@ -1,6 +1,8 @@
-import React, { useState } from "react";
-import styles from "./styles.css";
+import React, { useEffect, useState } from "react";
+import "./styles.css";
 import { validatePassword } from "../../utils/validators";
+import view from "../../assets/view.png";
+import hide from "../../assets/hide.png";
 
 export type RequirementType =
   | "specialChar"
@@ -8,27 +10,137 @@ export type RequirementType =
   | "uppercase"
   | "noConsecutive";
 
-interface Props {
-  options: RequirementType[];
+interface CustomRule {
+  message: string;
+  validate: (password: string) => boolean;
 }
 
-const PasswordValidator: React.FC<Props> = ({ options }) => {
+interface CustomStyles {
+  container?: string;
+  input?: string;
+  label?: string;
+  button?: string;
+  list?: string;
+  listItem?: string;
+}
+
+interface Props {
+  options: RequirementType[];
+  customRules?: CustomRule[];
+  onValidChange?: (password: string, isValid: boolean) => void;
+  customStyles?: CustomStyles;
+}
+
+const PasswordValidator: React.FC<Props> = ({
+  options,
+  customRules = [],
+  onValidChange,
+  customStyles = {},
+}) => {
   const [password, setPassword] = useState("");
+  const [isFocused, setIsFocused] = useState(false);
+  const [hasStartedTyping, setHasStartedTyping] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
 
   const validations = validatePassword(password, options);
 
+  const customValidations = customRules.map((rule) => ({
+    message: rule.message,
+    isValid: rule.validate(password),
+  }));
+
+  useEffect(() => {
+    if (onValidChange) {
+      const isValid =
+        Object.values(validations).every((value) => value) &&
+        customValidations.every((rule) => rule.isValid);
+      onValidChange(password, isValid);
+    }
+  }, [validations, customValidations]);
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
+    setPassword(e.target.value);
+    if (!hasStartedTyping) {
+      setHasStartedTyping(true);
+    }
+  };
+
+  const handleFocus = () => {
+    setIsFocused(true);
+  };
+
+  const handleBlur = () => {
+    if (password === "") {
+      setIsFocused(false);
+      setHasStartedTyping(false);
+    }
+  };
+
+  const togglePasswordVisibility = () => {
+    setShowPassword((prev) => !prev);
+  };
+
   return (
-    <div className="wrapper">
-      <input
-        type="password"
-        value={password}
-        onChange={(e) => setPassword(e.target.value)}
-        placeholder="Enter password"
-      />
-      <ul>
+    <div className={`relative w-full max-w-sm ${customStyles.container || ""}`}>
+      <div className="relative">
+        <input
+          id="password"
+          onChange={handleChange}
+          onFocus={handleFocus}
+          onBlur={handleBlur}
+          type={showPassword ? "text" : "password"}
+          value={password}
+          className={`input-field ${customStyles.input || ""}`}
+        />
+        <label
+          htmlFor="password"
+          className={`label ${
+            isFocused || password
+              ? "top-1 text-xs text-[#7395cf]"
+              : "top-4 text-base text-gray-400"
+          } ${customStyles.label || ""}`}
+        >
+          Password
+        </label>
+        <button
+          type="button"
+          onClick={togglePasswordVisibility}
+          className={`show-password ${customStyles.button || ""}`}
+        >
+          <img
+            src={showPassword ? hide : view}
+            alt="Toggle password visibility"
+            className="show-password-icon"
+          />
+        </button>
+      </div>
+      <ul className={`list ${customStyles.list || ""}`}>
         {options.map((req) => (
-          <li key={req} className={validations[req] ? "valid" : "invalid"}>
+          <li
+            key={req}
+            className={`${
+              !hasStartedTyping
+                ? "neutral"
+                : validations[req]
+                ? "valid"
+                : "invalid"
+            } ${customStyles.listItem || ""}`}
+          >
             {getMessage(req)}
+          </li>
+        ))}
+        {customRules.map((rule, index) => (
+          <li
+            key={`custom-${index}`}
+            className={`${
+              !hasStartedTyping
+                ? "neutral"
+                : customValidations[index].isValid
+                ? "valid"
+                : "invalid"
+            } ${customStyles.listItem || ""}`}
+          >
+            {rule.message}
           </li>
         ))}
       </ul>

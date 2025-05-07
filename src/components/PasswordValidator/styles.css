@@ -1,12 +1,30 @@
-.wrapper {
-  font-family: sans-serif;
-  max-width: 400px;
+.invalid {
+  color: #cb5255;
+}
+
+.neutral {
+  color: #616161;
+  transition: all 0.3s ease-in-out;
 }
 
 .valid {
-  color: green;
+  color: #aedfad;
+  text-decoration: line-through;
+  transition: all 0.3s ease-in-out;
 }
 
-.invalid {
-  color: red;
+.input-field {
+  @apply mb-4 block w-full appearance-none border border-gray-300 rounded-md bg-white px-3 pt-6 pb-2 text-sm text-gray-900 focus:border-[#7395cf] focus:outline-none focus:ring-1 focus:ring-[#7395cf];
+}
+
+.label {
+  @apply absolute left-3 transition-all duration-200 ease-in-out;
+}
+
+.show-password {
+  @apply absolute right-3 top-1/2 transform -translate-y-1/2 cursor-pointer;
+}
+
+.show-password-icon {
+  @apply w-5 h-5 text-gray-500;
 }

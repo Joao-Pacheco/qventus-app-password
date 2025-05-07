@@ -1,14 +1,138 @@
+import React from "react";
 import { render, screen, fireEvent } from "@testing-library/react";
-import { PasswordValidator } from "./PasswordValidator";
 import "@testing-library/jest-dom";
+import PasswordValidator, { RequirementType } from "./PasswordValidator";
 
-test("shows all validation messages correctly", () => {
-  render(<PasswordValidator options={["specialChar", "digit", "uppercase"]} />);
-  fireEvent.change(screen.getByPlaceholderText(/enter password/i), {
-    target: { value: "Test123!" },
+describe("PasswordValidator Component", () => {
+  const defaultOptions: RequirementType[] = [
+    "specialChar",
+    "digit",
+    "uppercase",
+  ];
+
+  it("renders the component correctly", () => {
+    render(<PasswordValidator options={defaultOptions} />);
+    expect(screen.getByLabelText("Password")).toBeInTheDocument();
   });
 
-  expect(screen.getByText(/special character/i)).toHaveClass("valid");
-  expect(screen.getByText(/number/i)).toHaveClass("valid");
-  expect(screen.getByText(/uppercase/i)).toHaveClass("valid");
+  it("shows default validation messages", () => {
+    render(<PasswordValidator options={defaultOptions} />);
+    expect(
+      screen.getByText("Contains special character (!@#$%^&*)")
+    ).toBeInTheDocument();
+    expect(screen.getByText("Contains a number")).toBeInTheDocument();
+    expect(
+      screen.getByText("Contains an uppercase letter")
+    ).toBeInTheDocument();
+  });
+
+  it("validates password based on default rules", () => {
+    render(<PasswordValidator options={defaultOptions} />);
+    const input = screen.getByLabelText("Password");
+
+    fireEvent.change(input, { target: { value: "Password1!" } });
+
+    expect(
+      screen.getByText("Contains special character (!@#$%^&*)")
+    ).toHaveClass("valid");
+    expect(screen.getByText("Contains a number")).toHaveClass("valid");
+    expect(screen.getByText("Contains an uppercase letter")).toHaveClass(
+      "valid"
+    );
+  });
+
+  it("validates password based on custom rules", () => {
+    const customRules = [
+      {
+        message: "Must be at least 10 characters long",
+        validate: (password: string) => password.length >= 10,
+      },
+      {
+        message: "Cannot contain the word 'password'",
+        validate: (password: string) =>
+          !password.toLowerCase().includes("password"),
+      },
+    ];
+
+    render(
+      <PasswordValidator options={defaultOptions} customRules={customRules} />
+    );
+    const input = screen.getByLabelText("Password");
+
+    fireEvent.change(input, { target: { value: "pass" } });
+
+    expect(screen.getByText("Must be at least 10 characters long")).toHaveClass(
+      "invalid"
+    );
+    expect(screen.getByText("Cannot contain the word 'password'")).toHaveClass(
+      "invalid"
+    );
+
+    fireEvent.change(input, { target: { value: "ValidPass123!" } });
+
+    expect(screen.getByText("Must be at least 10 characters long")).toHaveClass(
+      "valid"
+    );
+    expect(screen.getByText("Cannot contain the word 'password'")).toHaveClass(
+      "valid"
+    );
+  });
+
+  it("toggles password visibility", () => {
+    render(<PasswordValidator options={defaultOptions} />);
+    const input = screen.getByLabelText("Password");
+    const toggleButton = screen.getByRole("button", {
+      name: /toggle password visibility/i,
+    });
+
+    expect(input).toHaveAttribute("type", "password");
+
+    fireEvent.click(toggleButton);
+    expect(input).toHaveAttribute("type", "text");
+
+    fireEvent.click(toggleButton);
+    expect(input).toHaveAttribute("type", "password");
+  });
+
+  it("applies custom styles", () => {
+    const customStyles = {
+      container: "custom-container",
+      input: "custom-input",
+      label: "custom-label",
+      button: "custom-button",
+      list: "custom-list",
+      listItem: "custom-list-item",
+    };
+
+    render(
+      <PasswordValidator options={defaultOptions} customStyles={customStyles} />
+    );
+
+    expect(screen.getByLabelText("Password")).toHaveClass("custom-input");
+    expect(screen.getByRole("button")).toHaveClass("custom-button");
+    expect(
+      screen.getByText("Contains special character (!@#$%^&*)")
+    ).toHaveClass("custom-list-item");
+  });
+
+  it("calls onValidChange callback with correct values", () => {
+    const mockOnValidChange = jest.fn();
+
+    render(
+      <PasswordValidator
+        options={defaultOptions}
+        onValidChange={mockOnValidChange}
+      />
+    );
+
+    const input = screen.getByLabelText("Password");
+
+    fireEvent.change(input, { target: { value: "Password1!" } });
+
+    expect(mockOnValidChange).toHaveBeenCalledWith("Password1!", true);
+
+    fireEvent.change(input, { target: { value: "pass" } });
+
+    expect(mockOnValidChange).toHaveBeenCalledWith("pass", false);
+  });
 });
