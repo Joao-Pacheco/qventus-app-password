@@ -1,36 +1,97 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+````md
+# 🔐 Password Validator Lib
 
-## Getting Started
+Um componente React reutilizável para validação de senha, configurável por props. Criado para ser usado em múltiplos frontends com requisitos distintos.
 
-First, run the development server:
+---
+
+## 📦 Instalação
+
+### 1. Clonar o repositório
+
+```bash
+git clone https://github.com/seu-usuario/qventus-password-validator.git
+cd qventus-password-validator
+```
+````
+
+### 2. Instalar dependências
+
+```bash
+npm install
+```
+
+> 💡 Este projeto utiliza **Vite** e **TypeScript**.
+
+---
+
+## 🚀 Rodando o projeto localmente
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Acesse `http://localhost:5173` no navegador para ver o componente em ação.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+---
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## 🧪 Executando os testes
 
-## Learn More
+O projeto usa **Jest** e **React Testing Library** para testes automatizados.
 
-To learn more about Next.js, take a look at the following resources:
+```bash
+npm run test
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+Para rodar os testes em modo watch (útil durante o desenvolvimento):
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+```bash
+npm run test:watch
+```
 
-## Deploy on Vercel
+---
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## 💡 Exemplo de uso
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+No seu app:
+
+```tsx
+import { PasswordValidator } from "./components/PasswordValidator";
+
+const App = () => (
+  <PasswordValidator
+    options={["specialChar", "digit", "uppercase", "noConsecutive"]}
+  />
+);
+```
+
+---
+
+## 🔧 Requisitos disponíveis
+
+Você pode configurar o componente com qualquer combinação dos seguintes requisitos:
+
+| Chave (`options[]`) | Requisito                                                 |
+| ------------------- | --------------------------------------------------------- |
+| `specialChar`       | Deve conter pelo menos um caractere especial (!@#\$%^&\*) |
+| `digit`             | Deve conter ao menos um número                            |
+| `uppercase`         | Deve conter ao menos uma letra maiúscula                  |
+| `noConsecutive`     | Não deve conter letras consecutivas repetidas (ex: "aa")  |
+
+---
+
+## 📚 Futuras melhorias
+
+- Suporte a mensagens de erro customizadas via props
+- Internacionalização (i18n)
+- Validações assíncronas (ex: força da senha via API)
+- Publicação como pacote NPM
+
+---
+
+## 🧑‍💻 Feito com 💙 para o desafio técnico da Qventus
+
+```
+
+---
+```
