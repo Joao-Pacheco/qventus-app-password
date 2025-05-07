@@ -3,6 +3,7 @@ import "./styles.css";
 import { validatePassword } from "../../utils/validators";
 import view from "../../assets/view.png";
 import hide from "../../assets/hide.png";
+import { getMessage } from "../../utils/getMessage";
 
 export type RequirementType =
   | "specialChar"
@@ -152,14 +153,4 @@ export const PasswordValidator: React.FC<Props> = ({
       </ul>
     </div>
   );
-};
-
-export const getMessage = (req: RequirementType): string => {
-  const messages = {
-    specialChar: "Contains special character (!@#$%^&*)",
-    digit: "Contains a number",
-    uppercase: "Contains an uppercase letter",
-    noConsecutive: "No consecutive letters",
-  };
-  return messages[req];
 };
