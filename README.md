@@ -150,7 +150,7 @@ npm test --watch  # Run in watch mode
 
 ---
 
-## ✅ Where can you see the predefined validation rules?
+## ✅ Where can I see the predefined validation rules?
 
 Go to the following folder
 
